@@ -1,10 +1,7 @@
 from fastapi import FastAPI
-from app.routes import router
+from .routes import router  # IMPORTANTE
 
 app = FastAPI()
 
+# registra as rotas definidas em routes.py
 app.include_router(router)
-
-@app.get("/")
-def home():
-    return {"status": "API online!"}
