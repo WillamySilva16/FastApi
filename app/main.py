@@ -1,10 +1,13 @@
 from fastapi import FastAPI
-from routes import router
+from db import buscar_visitas  # importa função que pega dados do BD
 
 app = FastAPI()
 
 @app.get("/")
-def root():
-    return {"status": "API conectada ao SQL Server"}
+def home():
+    return {"status": "API online!"}
 
-pp.include_router(router)
+@app.get("/visitas")
+def listar_visitas():
+    dados = buscar_visitas()
+    return dados
