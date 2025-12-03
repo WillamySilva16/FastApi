@@ -1,18 +1,28 @@
 import pyodbc
 
-def get_connection():
+def buscar_visitas():
     server = "pbdb3073.database.windows.net"
     database = "PBDB3073"
     username = "admrs"
-    password = "Gf3$Rn8!Qb12^KsW0tZ"  # depois colocamos isso em variável de ambiente no Railway
-    
-    connection_string = (
-        f"DRIVER={{ODBC Driver 18 for SQL Server}};"
+    password = "Gf3$Rn8!Qb12^KsW0tZ"  # coloque a senha que usa no SQLDBX
+
+    conn_str = (
+        "DRIVER={ODBC Driver 17 for SQL Server};"
         f"SERVER={server};"
         f"DATABASE={database};"
         f"UID={username};"
-        f"PWD={password};"
-        "Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        f"PWD={password}"
     )
 
-    return pyodbc.connect(connection_string)
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT TOP 100 * FROM TAB_REGISTRO_VISITA_SUPERVISAO_CABECALHO")
+
+    columns = [column[0] for column in cursor.description]
+    results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    cursor.close()
+    conn.close()
+    
+    return results
